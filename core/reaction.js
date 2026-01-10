@@ -24,13 +24,13 @@ function definePropertyObj(obj, key) {
 
   Object.defineProperty(obj, key, {
     get() {
-      console.log(`读取: ${_key}`);
+      // console.log(`读取: ${_key}`);
       return this[_key];
     },
     set(newVal) {
       if (newVal === this[_key]) return;
 
-      console.log(`赋值: ${_key}`);
+      // console.log(`赋值: ${_key}`);
 
       this[_key] = newVal;
 
@@ -56,7 +56,7 @@ function definePropertyArr(arr) {
 
   resetMethods.forEach((method) => {
     newArrayPrototype[method] = function (...args) {
-      console.log(`执行: ${method}; ${args}`);
+      // console.log(`执行: ${method}; ${args}`);
       const result = arrayPrototype[method].apply(this, args);
 
       let inserted = null;

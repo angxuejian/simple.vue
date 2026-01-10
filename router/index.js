@@ -5,13 +5,23 @@ function createRouter(router) {
   const render = () => {
     const path = location.hash.slice(1) || "/";
     const loadRoute = matchRoute(path);
-
     if (!loadRoute) { throw new Error("Router: path not find"); }
 
-    global.itemComponentRender = loadRoute.component()
-    global.itemRouterView = $routerView
-    const itemVNode = global.itemComponentRender()
+    if (global.$instance) callHook(global.$instance, 'beforeUnmount');
+    const componentInstance = createComponentInstance(loadRoute.component())
+    callHook(componentInstance, 'beforeMount')
+
+    const itemVNode = componentInstance.render()
     $mount(itemVNode, $routerView, { replace: true})
+
+    if (global.$instance) {
+      callHook(global.$instance, 'unmounted');
+      global.$instance = null;
+    };
+    callHook(componentInstance, 'mounted')
+
+    global.$instance = componentInstance
+    global.$routerView = $routerView
   };
 
   const matchRoute = (path) => {
