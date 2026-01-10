@@ -1,0 +1,38 @@
+name: release simple.vue
+
+# 执行action的条件
+# 当main分支 push事件触发时执行任务
+on:
+  push:
+    branches: [main]
+
+jobs:
+  release-html: # job名称
+    runs-on: ubuntu-latest # 在GitHub托管的新虚拟机上执行(https://docs.github.com/zh/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idruns-on)
+
+    permissions:
+      contents: write  # ⚠️ 创建 tag / release 必须
+
+    steps:
+
+      # 创建 Tag
+      - name: Create git tag
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const tag = 'v0.0.1'
+            await github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: `refs/tags/${tag}`,
+              sha: context.sha
+            })
+
+      # 3️⃣ 创建 GitHub Release
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v0.0.1
+          name: Release v0.0.1
+          generate_release_notes: true
+
