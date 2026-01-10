@@ -43,8 +43,9 @@ function mount(vnode, container, method) {
     }
   }
 
-  if (typeof vnode.children === "string") {
-    el.textContent = vnode.children;
+  const types = ['string', 'boolean', 'number']
+  if (types.includes(typeof vnode.children)) {
+    el.textContent = `${vnode.children}`;
   } else if (Array.isArray(vnode.children)) {
     vnode.children.forEach((child) => mount(child, el));
   }
