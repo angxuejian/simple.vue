@@ -22,6 +22,7 @@ function createRouter(router) {
 
     global.$instance = componentInstance
     global.$routerView = $routerView
+    global.$oldComponentVNode = itemVNode
   };
 
   const matchRoute = (path) => {

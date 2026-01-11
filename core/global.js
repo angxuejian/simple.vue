@@ -2,5 +2,6 @@
 
 const global = {
     $routerView: null,
-    $instance: null
+    $instance: null,
+    $oldComponentVNode: null
 }
