@@ -1,6 +1,6 @@
 function createRouter(router) {
   let $routerView;
-  let $mount;
+  let $replaceVNode;
 
   const render = () => {
     const path = location.hash.slice(1) || "/";
@@ -12,7 +12,7 @@ function createRouter(router) {
     callHook(componentInstance, 'beforeMount')
 
     const itemVNode = componentInstance.render()
-    $mount(itemVNode, $routerView, { replace: true})
+    $replaceVNode(global.$oldComponentVNode, itemVNode, $routerView)
 
     if (global.$instance) {
       callHook(global.$instance, 'unmounted');
@@ -35,9 +35,9 @@ function createRouter(router) {
   };
 
   return {
-    $init(routerView, mount) {
+    $init(routerView, rpHandler) {
       $routerView = routerView;
-      $mount = mount
+      $replaceVNode = rpHandler
       window.addEventListener("hashchange", render);
       render();
     },

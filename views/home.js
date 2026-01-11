@@ -2,60 +2,60 @@ function homeComponent() {
   return {
     data() {
       return {
-        user: { name: "yuhua" },
         isShow: false,
         inputVal: "v-model: value",
         list: [1, 2, 3],
       };
     },
-    beforeCreate() {
-      console.log('beforeCreate')
-    },
-    created() {
-      console.log('created', this)
-    },
-    beforeMount() {
-      console.log('beforeMount')
-    },
-    mounted() {
-      console.log('mounted')
-    },
-    beforeUpdate() {
-      console.log('beforeUpdate')
-    },
-    updated() {
-      console.log('updated')
-    },
-    beforeUnmount() {
-      console.log('beforeUnmount')
-    },
-    unmounted() {
-      console.log('unmounted')
-    },
     render() {
       return h("div", null, [
-        h("p", null, this.user.name),
-        h(
-          "button",
-          {
-            onclick: () => {
-              // this.user.name += 1
-              this.list.push(this.list.length + 1)
-              // this.isShow = !this.isShow
-              // this.$set(this.list, 0, 6)
+        h("div", null, [
+          h(
+            "button",
+            {
+              onclick: () => {
+                this.isShow = !this.isShow;
+              },
             },
-          },
-          "add"
-        ),
+            this.isShow ? "hide" : "show"
+          ),
+          h(
+            "button",
+            {
+              onclick: () => {
+                this.list.push(this.list.length);
+              },
+            },
+            "push"
+          ),
+          h(
+            "button",
+            {
+              onclick: () => {
+                this.list.pop();
+              },
+            },
+            "pop"
+          ),
+          h(
+            "button",
+            {
+              onclick: () => {
+                this.inputVal += 1;
+              },
+            },
+            "inputVal += 1"
+          ),
+        ]),
         h("div", null, [this.isShow ? h("p", null, "v-if: show") : ""]),
         h("ul", null, [
           ...this.list.map((_, index) => h("li", null, `v-for: ${_}`)),
         ]),
+        h("p", null, `${this.inputVal}`),
         h("input", {
           value: this.inputVal,
           oninput: (event) => {
             this.inputVal = event.target.value;
-            console.log(inputVal);
           },
         }),
       ]);

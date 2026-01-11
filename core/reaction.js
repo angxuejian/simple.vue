@@ -40,7 +40,6 @@ function definePropertyObj(obj, key) {
     },
   });
 }
-
 function definePropertyArr(arr) {
   const arrayPrototype = Array.prototype;
   const newArrayPrototype = Object.create(arrayPrototype);
@@ -85,7 +84,6 @@ function definePropertyArr(arr) {
 
   arr.__proto__ = newArrayPrototype;
 }
-
 function defineReactionSet(target, key, value) {
   // 数组
   if (Array.isArray(target) && typeof key === "number") {
@@ -103,9 +101,8 @@ function defineReactionSet(target, key, value) {
   definePropertyObj(target, key)
   defineUpdate()
 }
-
 function defineUpdate() {
-  if (typeof update === "function") {
-    update();
+  if (typeof updateHandler === "function") {
+    updateHandler();
   }
 }
