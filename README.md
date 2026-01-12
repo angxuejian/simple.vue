@@ -1,4 +1,4 @@
-# simple.vue
+# Simple.vue
 simple.vue is a minimal front-end framework built to help learn and understand the core principles of Vue.
 
 ## Feature Progress
