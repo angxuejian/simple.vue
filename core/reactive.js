@@ -35,16 +35,16 @@ function proxyRef(value) {
   return new Proxy(obj, baseHandler());
 }
 
-const arr = proxyReactive([0]);
-const age = proxyRef(0);
-const obj = proxyReactive({ name: 123 });
+const arr111 = proxyReactive([0]);
+const age111 = proxyRef(0);
+const obj111 = proxyReactive({ name: 123 });
 
 console.log('Proxy')
 console.log('==========================')
-"name" in obj;
-arr[0];
-age.value = 20;
-for (const key in obj) {
+"name" in obj111;
+arr111[0];
+age111.value = 20;
+for (const key in obj111) {
   // console.log(obj[key])
 }
 console.log('==========================')
