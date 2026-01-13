@@ -25,6 +25,23 @@ function createComponentInstance(component) {
     instance.data = defineReaction(component.data())
     instance.data['$set'] = defineReactionSet
   }
+
+  if (component.watch) {
+    for (const key in component.watch) {
+      const item = component.watch[key];
+      let fn = item;
+      let options = {};
+      if (item.handler) {
+        fn = item.handler
+        const { handler, ...rest } = item
+        options = rest
+      }
+
+      new Watcher(() => instance.data[key], fn, options)
+    }
+  }
+
+
   callHook(instance, 'created')
  
   instance.render = component.render.bind(instance.data)

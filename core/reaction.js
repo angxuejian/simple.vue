@@ -14,6 +14,7 @@ function defineReaction(obj) {
 }
 function definePropertyObj(obj, key) {
   const _key = `_${key}`;
+  const dep = new Dep()
 
   Object.defineProperty(obj, `_${key}`, {
     value: obj[key],
@@ -25,6 +26,12 @@ function definePropertyObj(obj, key) {
   Object.defineProperty(obj, key, {
     get() {
       // console.log(`读取: ${_key}`);
+
+      if (Dep.target) {
+        // console.log(key, '绑定watch')
+        dep.depend()
+      }
+
       return this[_key];
     },
     set(newVal) {
@@ -35,7 +42,8 @@ function definePropertyObj(obj, key) {
       this[_key] = newVal;
 
       defineReaction(newVal);
-
+      // console.log(key, 'watch 通知')
+      dep.notify()
       defineUpdate()
     },
   });
