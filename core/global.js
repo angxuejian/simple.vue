@@ -1,7 +1,6 @@
+let uid = 0;
+let oldRouterKey = ""; // 旧路由组件
+let oldComponentKey = ""; // 旧组件
 
-
-const global = {
-    $routerView: null,
-    $instance: null,
-    $oldComponentVNode: null
-}
+// $Key: { $instance, $container, $oldVNode }
+const global = {};

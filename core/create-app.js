@@ -1,18 +1,20 @@
-
-function createApp(sfc) {
-  const appSFC = sfc;
-  const appVNode = compilerSFC(appSFC);
-
+function createApp(component) {
   let $routerInstance;
 
   return {
     $mount(key) {
       const container = document.querySelector(key);
-      mountHandler(appVNode, container);
+      const { vnode: appVNode, $key } = renderComponent({
+        container,
+        component,
+        oldInstanceKey: oldComponentKey,
+      });
+
+      oldComponentKey = $key;
 
       if ($routerInstance) {
         const routerView = appVNode.el.querySelector(".router-view");
-        $routerInstance.$init(routerView, replaceHandler);
+        $routerInstance.$init(routerView, renderComponent);
       }
       return this;
     },

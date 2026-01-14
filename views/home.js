@@ -23,7 +23,7 @@ function homeComponent() {
             "button",
             {
               onclick: () => {
-                this.list.push(this.list.length);
+                this.list.push(this.list.length + 1);
               },
             },
             "push"

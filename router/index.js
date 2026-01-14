@@ -1,28 +1,22 @@
 function createRouter(router) {
   let $routerView;
-  let $replaceVNode;
+  let $replaceFn;
 
-  const render = () => {
+  const render = (e) => {
     const path = location.hash.slice(1) || "/";
+
     const loadRoute = matchRoute(path);
-    if (!loadRoute) { throw new Error("Router: path not find"); }
+    if (!loadRoute) {
+      throw new Error("Router: path not find");
+    }
 
-    if (global.$instance) callHook(global.$instance, 'beforeUnmount');
-    const componentInstance = createComponentInstance(loadRoute.component())
-    callHook(componentInstance, 'beforeMount')
+    const { $key } = $replaceFn({
+      container: $routerView,
+      component: loadRoute,
+      oldInstanceKey: oldRouterKey,
+    });
 
-    const itemVNode = componentInstance.render()
-    $replaceVNode(global.$oldComponentVNode, itemVNode, $routerView)
-
-    if (global.$instance) {
-      callHook(global.$instance, 'unmounted');
-      global.$instance = null;
-    };
-    callHook(componentInstance, 'mounted')
-
-    global.$instance = componentInstance
-    global.$routerView = $routerView
-    global.$oldComponentVNode = itemVNode
+    oldRouterKey = $key;
   };
 
   const matchRoute = (path) => {
@@ -37,7 +31,7 @@ function createRouter(router) {
   return {
     $init(routerView, rpHandler) {
       $routerView = routerView;
-      $replaceVNode = rpHandler
+      $replaceFn = rpHandler;
       window.addEventListener("hashchange", render);
       render();
     },

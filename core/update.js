@@ -1,16 +1,15 @@
+function updateHandler($key) {
+  if (!global[$key]) return;
+  const { $instance, $oldVNode, $container } = global[$key];
 
+  callHook($instance, "beforeUpdate");
 
-function updateHandler() {
-  if (global.$instance === null || global.$routerView === null) return;
-  callHook(global.$instance, "beforeUpdate");
+  const component = $instance.render();
+  patch($oldVNode, component, $container);
 
-  const component = global.$instance.render();
-  patch(global.$oldComponentVNode, component, global.$routerView);
-
-  global.$oldComponentVNode = component;
-  callHook(global.$instance, "updated");
+  global[$key].$oldVNode = component;
+  callHook($instance, "updated");
 }
-
 
 function patchElement(oldVNode, newVNode) {
   newVNode.el = oldVNode.el;
@@ -21,7 +20,8 @@ function patchElement(oldVNode, newVNode) {
 function patch(oldVNode, newVNode, container) {
   if (!oldVNode) mountHandler(newVNode, container);
   else if (!newVNode) unmountHandler(oldVNode);
-  else if (oldVNode.type !== newVNode.type) replaceHandler(oldVNode, newVNode, container);
+  else if (oldVNode.type !== newVNode.type)
+    replaceHandler(oldVNode, newVNode, container);
   else {
     patchElement(oldVNode, newVNode);
   }
@@ -31,7 +31,6 @@ function patchProps(oldVNode, newVNode) {
   const el = oldVNode.el;
   const oldProps = oldVNode.props || {};
   const newProps = newVNode.props || {};
-
 
   // 1. 删除旧的
   for (const key in oldProps) {
@@ -83,7 +82,7 @@ function patchChildren(oldVNode, newVNode) {
 
   // newChildren 为 null / undefined
   if (Array.isArray(oldChildren)) {
-    oldChildren.forEach(child => unmountHandler(child))
+    oldChildren.forEach((child) => unmountHandler(child));
   }
   el.textContent = "";
 }

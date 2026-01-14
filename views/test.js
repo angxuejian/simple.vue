@@ -6,7 +6,18 @@ function testComponent() {
         list: [{ name: "yuhua" }],
         isShow: false,
         isDiv: false,
+        count: 0,
       };
+    },
+    watch: {
+      count(newV) {
+        console.log("watch: count ->", newV);
+      },
+    },
+    methods: {
+      countHandler() {
+        this.count++;
+      },
     },
     beforeCreate() {
       console.log("beforeCreate");
@@ -90,6 +101,7 @@ function testComponent() {
             },
             "switch isDiv"
           ),
+          h("button", { onclick: this.countHandler }, "count add"),
         ]),
         h(
           "p",
@@ -111,7 +123,8 @@ function testComponent() {
         ),
         this.isDiv ? h("div", null, "div") : h("p", null, "p"),
 
-        h('p', null, 'Tips: Diff Test Checklist')
+        h("p", null, `watch: count -> ${this.count}`),
+        h("p", null, "Tips: Diff Test Checklist"),
       ]);
     },
   };

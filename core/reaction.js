@@ -1,20 +1,24 @@
-function defineReaction(obj) {
+// __KEY = $key = global[instanceKey] => 通知要更新的实例
+function defineReaction(obj, $key) {
   if (typeof obj !== "object" || obj === null) return obj;
-  else if (Array.isArray(obj)) {
-    definePropertyArr(obj);
 
-    obj.forEach((item) => defineReaction(item));
+  const __KEY = $key;
+
+  if (Array.isArray(obj)) {
+    definePropertyArr(obj, __KEY);
+
+    obj.forEach((item) => defineReaction(item, __KEY));
   } else {
     Object.keys(obj).forEach((key) => {
-      defineReaction(obj[key]);
-      definePropertyObj(obj, key)
+      defineReaction(obj[key], __KEY);
+      definePropertyObj(obj, key, __KEY);
     });
   }
   return obj;
 }
-function definePropertyObj(obj, key) {
+function definePropertyObj(obj, key, __KEY) {
   const _key = `_${key}`;
-  const dep = new Dep()
+  const dep = new Dep();
 
   Object.defineProperty(obj, `_${key}`, {
     value: obj[key],
@@ -29,7 +33,7 @@ function definePropertyObj(obj, key) {
 
       if (Dep.target) {
         // console.log(key, '绑定watch')
-        dep.depend()
+        dep.depend();
       }
 
       return this[_key];
@@ -41,14 +45,14 @@ function definePropertyObj(obj, key) {
 
       this[_key] = newVal;
 
-      defineReaction(newVal);
+      defineReaction(newVal, __KEY);
       // console.log(key, 'watch 通知')
-      dep.notify()
-      defineUpdate()
+      dep.notify();
+      defineUpdate(__KEY);
     },
   });
 }
-function definePropertyArr(arr) {
+function definePropertyArr(arr, __KEY) {
   const arrayPrototype = Array.prototype;
   const newArrayPrototype = Object.create(arrayPrototype);
   const resetMethods = [
@@ -63,7 +67,6 @@ function definePropertyArr(arr) {
 
   resetMethods.forEach((method) => {
     newArrayPrototype[method] = function (...args) {
-      // console.log(`执行: ${method}; ${args}`);
       const result = arrayPrototype[method].apply(this, args);
 
       let inserted = null;
@@ -81,18 +84,16 @@ function definePropertyArr(arr) {
 
       // 如果有新增数据，就再次循环绑定响应式
       if (inserted) {
-        inserted.forEach((item) => defineReaction(item));
+        inserted.forEach((item) => defineReaction(item, __KEY));
       }
-
-      defineUpdate()
-
+      defineUpdate(__KEY);
       return result;
     };
   });
 
   arr.__proto__ = newArrayPrototype;
 }
-function defineReactionSet(target, key, value) {
+function defineReactionSet(target, key, value, $key) {
   // 数组
   if (Array.isArray(target) && typeof key === "number") {
     target.splice(key, 1, value);
@@ -105,12 +106,14 @@ function defineReactionSet(target, key, value) {
     return;
   }
 
+  const __KEY = $key;
+
   // 新增属性
-  definePropertyObj(target, key)
-  defineUpdate()
+  definePropertyObj(target, key, __KEY);
+  defineUpdate(__KEY);
 }
-function defineUpdate() {
+function defineUpdate(key) {
   if (typeof updateHandler === "function") {
-    updateHandler();
+    updateHandler(key);
   }
 }

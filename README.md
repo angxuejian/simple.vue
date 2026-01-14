@@ -17,5 +17,6 @@ simple.vue is a minimal front-end framework built to help learn and understand t
 | v-if/v-for/v-model| done | 使用 `JS` 语法完成 |
 | Diff 算法  | done | `patch`完成；（未完成：`array key`、`多次数据更新只一次渲染`） |
 | `watch`    | done | 支持 `deep` / `immediate`  |
+| `methods`  | done | ~  |
 | `computed` | ongoing | 需要 lazy + cache |
 
