@@ -24,7 +24,7 @@ new Watcher constructor() { watcher.get() } ->  Dep.target = watcher
     │                                                          │ 
     ↓                                                          └───────────── → cleanupDeps 更新新依赖 Dep / 移除不再依赖的 dep
 
-count.getter / Object.defineProperty get() -> dep.depend() / watcher.addDep()
+count.getter / Object.defineProperty get() -> dep.depend() / watcher.addDep() = count 收集当前 watch
 
     ↓
 
