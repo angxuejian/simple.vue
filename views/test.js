@@ -4,10 +4,15 @@ function testComponent() {
       return {
         isSwitch: false,
         list: [{ name: "yuhua" }],
-        isShow: false,
+        isShow: true,
         isDiv: false,
         count: 0,
       };
+    },
+    computed: {
+      showname() {
+        return this.isShow ? 'yuhua' : 'xuejyang'
+      }
     },
     watch: {
       count(newV) {
@@ -124,6 +129,11 @@ function testComponent() {
         this.isDiv ? h("div", null, "div") : h("p", null, "p"),
 
         h("p", null, `watch: count -> ${this.count}`),
+        h('p', null, [
+          h('span', null, `computed: name -> ${this.showname}`),
+          h('span', { style: "margin: 0 20px;" }, '/'),
+          h('span', { style: 'color: #999' }, "click【switch show】button to see the changes")
+        ]),
         h("p", null, "Tips: Diff Test Checklist"),
       ]);
     },

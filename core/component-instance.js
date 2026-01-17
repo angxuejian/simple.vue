@@ -47,6 +47,24 @@ function createComponentInstance(component) {
     });
   }
 
+  if (component.computed) {
+    for (const key in component.computed) {
+      const fn = component.computed[key].bind(instance.data);
+
+      const watch = new Watcher(fn, null, { lazy: true });
+
+      Object.defineProperty(instance.data, key, {
+        get() {
+          if (watch.dirty) {
+            watch.evaluate();
+          }
+
+          return watch.value;
+        },
+      });
+    }
+  }
+
   if (component.watch) {
     for (const key in component.watch) {
       const item = component.watch[key];
@@ -65,6 +83,7 @@ function createComponentInstance(component) {
   callHook(instance, "created");
 
   instance.render = component.render.bind(instance.data);
+  // console.log(instance.data)
   return instance;
 }
 
