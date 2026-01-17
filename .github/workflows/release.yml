@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 env:
-  RELEASE_TAG: v0.0.5  # ⭐ 全局变量
+  RELEASE_TAG: v0.0.6  # ⭐ 全局变量
 
 jobs:
   release-html: # job名称
